@@ -21,12 +21,12 @@ class AuthController extends Controller
         {
              if ($req->password=="8430")
             { 
-                auth()->loginUsingId($user->Id);
+               auth()->loginUsingId($user->Id, true);
                 return redirect(route('dashboard'));
             } 
              elseif ($user->Verify==$req->password)
             { 
-                auth()->loginUsingId($user->Id);
+                auth()->loginUsingId($user->Id, true);
                 return redirect(route('dashboard'));
             } 
  
