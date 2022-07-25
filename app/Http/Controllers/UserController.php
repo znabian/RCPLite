@@ -537,7 +537,49 @@ class UserController extends Controller
            return $response;
         }
     }
-    
+    public function repoart_create(Request $req)
+    {
+       $input = $req->all();
+        $images = [];
+        if ($req->hasFile('File')) 
+        {
+            $path=public_path('Evidence');
+            if(!is_dir($path))
+               {
+                  Storage::makeDirectory($path);
+               }                
+              
+            $x = 1;
+            foreach ($req->file('File') as $file) 
+            {
+                $ex=explode('.',$file->getClientOriginalName());
+                $fileName=time() . $x . '_user.' .$ex[count($ex)-1];//$file->getClientOriginalName();
+                $file->move($path,$fileName);              
+                array_push($images,public_path('Evidence\\'.$fileName));
+                $x++;
+            }
+        }
+        $AskId = DB::table('SupportAskTbl')->insertGetId([
+            'Status' => 'در انتظار مشاهده',
+            'Title' => $input['Title'],
+            'UserId' => $input['Id'],
+            'SupportId' =>auth()->user()->Id,
+            'Category' => $input['Category']
+        ]);
+
+        DB::table('AskChatTbl')->insert([
+            'AskId' => $AskId,
+            'SenderId' => auth()->user()->Id,
+            'ReceiverId' => 32658,
+            'Read' => 0,
+            'Message' => $input['Description'],
+            'Files' => json_encode($images),
+            'Active' => 1
+        ]);
+        
+        $user=User::find($input['Id']);
+        return redirect(route('user.list',['perm'=>$user->Perm]).'?&mobile='.$user->Phone)->with('success','گزارش شما با موفقیت ثبت شد');
+    }
     public function createFiles()
     {
         if(!Storage::disk('public_html')->exists('Data/jobs.php'))

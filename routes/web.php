@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
         //User Group
 
         Route::view('/{user}/Report/Add','user.report.new')->name('user.report.add');
+        Route::post('/Report/Create',[UserController::class,'repoart_create'])->name('user.report.create');
         Route::view('/{user}/Call/Add','user.call.new')->name('user.call.add');
         Route::view('/{user}/Call/FirstcallEdit/{edit}','user.call.new')->name('user.Fcall.edit');
         Route::view('/{user}/Call/IntroCallEdit/{call}','user.call.new')->name('user.Icall.edit');
