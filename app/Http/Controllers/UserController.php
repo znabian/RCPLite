@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use PhpParser\Node\Stmt\TryCatch;
 use UxWeb\SweetAlert\SweetAlert;
+use Illuminate\Support\Facades\Http;
 
 class UserController extends Controller
 {
@@ -95,6 +96,17 @@ class UserController extends Controller
         $backUrl=route('user.list',['perm'=>$user->Perm]).'?mobile='.$user->Phone;
         $jobs = Storage::disk('public_html')->get('Data/jobs.php');
         $jobs=json_decode($jobs);
+        $response = Http::get("http://85.208.255.101:8012/RedCastlePanel/public/api/get_jobs");
+            if($response->ok())
+            {
+                $remote_jobs=$response->json();
+                foreach(array_diff($remote_jobs,$jobs) as $def)
+                 {
+                    if($def)
+                    array_push($jobs,$def);
+                }
+                Storage::disk('public_html')->put('Data/jobs.php',json_encode($jobs));
+            }
         return view('user.edit',compact('user','backUrl','jobs'));
     }
     public function create(Request $req)
@@ -145,46 +157,55 @@ class UserController extends Controller
         unset($input['_token']);
         //unset($input['Challenge']);
         
-        
-           try {
+         $input['UserId']=$user->Id;
+           if(!is_null($input['MBD']))
                 $input['MotherBirthDay']= jdate(date('Y-m-d',$input['MBD']/1000))->format('Y-m-d');
-            } catch (\Throwable $th) {
-                unset($input['MotherBirthDay']);               
-            }  
-           try {
+            
+          if(!is_null($input['FBD']))
                 $input['FatherBirthDay']= jdate(date('Y-m-d',$input['FBD']/1000))->format('Y-m-d');
-            } catch (\Throwable $th) {
-                unset($input['FatherBirthDay']);               
-            }   
+          
         unset($input['FBD']);unset($input['MBD']);
 
         $jobs = Storage::disk('public_html')->get('Data/jobs.php');
         $jobs=json_decode($jobs);$f=0;
-        if(in_array($input['Fajob'],$jobs))
+        if(!is_null($input['Fajob']) && in_array($input['Fajob'],$jobs))
         $input['FatherJob']=array_search($input['Fajob'],$jobs);
-        else
+        elseif(!is_null($input['Fajob']))
         {
             $jobs[count($jobs)]=$input['Fajob'];$f=1;
              $input['FatherJob']=array_search($input['Fajob'],$jobs);
         }
+        else
+        $input['FatherJob']=0;
         
 
-        if(in_array($input['Mojob'],$jobs))
+        if(!is_null($input['Mojob']) && in_array($input['Mojob'],$jobs))
         $input['MotherJob']=array_search($input['Mojob'],$jobs);
-        else
+        elseif(!is_null($input['Mojob']))
         {
             $jobs[count($jobs)]=$input['Mojob'];$f=1;
         $input['MotherJob']=array_search($input['Mojob'],$jobs);
         }
+        else
+        $input['MotherJob']=0;
 
         if($f)
         {
+            $response = Http::get("http://85.208.255.101:8012/RedCastlePanel/public/api/get_jobs");
+            if($response->ok())
+            {
+                $remote_jobs=$response->json();
+                foreach(array_diff($remote_jobs,$jobs) as $def)
+                    array_push($jobs,$def);
+            }
+            Http::post("http://85.208.255.101:8012/RedCastlePanel/public/api/Update_Jobs",['jobs'=>json_encode($jobs)]);
             Storage::disk('public_html')->put('Data/jobs.php',json_encode($jobs));
         }
         unset($input['Mojob']); unset($input['Fajob']);
-       $input['Updated_at'] = date('Y-m-d H:i:s');
+        $input['Updated_at'] = date('Y-m-d H:i:s');
        
-            if (!$user->Detail()) {
+            if (!$user->Detail()->count()) 
+            {
                 
                 $detailId = DB::table('UserDetailsTbl')->insertGetId($input);
                 DB::table('UserTbl')->where('Id', $user->Id)->update(['DetailId' => $detailId]);
@@ -589,6 +610,13 @@ class UserController extends Controller
                 "پرستار","مشاور و روانشناس","راننده","آشپز","تاسیسات","مهندس","کارگر",
                 "مدرس","فروشنده","هنرمند","کشاورز"
             ];
+            $response = Http::get("http://85.208.255.101:8012/RedCastlePanel/public/api/get_jobs_2");
+            if($response->ok())
+            {
+                $jobs=$response->json();
+                
+            }
+            
             Storage::disk('public_html')->put('Data/jobs.php',json_encode($jobs));
         } 
          if(!Storage::disk('public_html')->exists('Data/ReportTitle.php'))
@@ -598,6 +626,12 @@ class UserController extends Controller
               "عدم ورود به کاخ والدین","ارور 419 لینک استعدادیابی","مشکل نصب در لپ تاپ"
               , "عدم بارگذاری چالش ها","باز نشدن سطح بعدی","باز نشدن مرحله بعدی","مشکل در عینک واقعیت مجازی","مشکل در نسخه جدید"
             ];
+            $response = Http::get("http://85.208.255.101:8012/RedCastlePanel/public/api/get_RT");
+            if($response->ok())
+            {
+                $title=$response->json();
+                
+            }
             Storage::disk('public_html')->put('Data/ReportTitle.php',json_encode($title)); 
        }
     }

@@ -33,11 +33,11 @@
                         </div>
                         <div class="form-group col-md-3">
                             <label>تاریخ تولد پدر</label>
-                          <input class="form-control" id="FatherBD" name="FatherBirthDay" autocomplete="off" readonly style="background: transparent" placeholder="وارد نشده" value="{{($user->Detail->FatherBirthDay)?\Morilog\Jalali\CalendarUtils::createCarbonFromFormat('Y-m-d', $user->Detail->FatherBirthDay):null}}">
+                          <input class="form-control" id="FatherBD" autocomplete="off" readonly style="background: transparent" placeholder="وارد نشده" value="{{($user->Detail()->count())?(($user->Detail->FatherBirthDay)?\Morilog\Jalali\CalendarUtils::createCarbonFromFormat('Y-m-d', $user->Detail->FatherBirthDay):null):null}}">
                         </div>
                         <div class="form-group col-md-3">
                             <label>تاریخ تولد مادر</label>
-                            <input class="form-control" id="MotherBD" name="MotherBirthDay" style="background: transparent" autocomplete="off" readonly  placeholder="وارد نشده" value="{{($user->Detail->MotherBirthDay)?\Morilog\Jalali\CalendarUtils::createCarbonFromFormat('Y-m-d', $user->Detail->MotherBirthDay):null}}">
+                            <input class="form-control" id="MotherBD" style="background: transparent" autocomplete="off" readonly  placeholder="وارد نشده" value="{{($user->Detail()->count())?(($user->Detail->MotherBirthDay)?\Morilog\Jalali\CalendarUtils::createCarbonFromFormat('Y-m-d', $user->Detail->MotherBirthDay):null):null}}">
                         </div>
                         <input type="hidden" id="MBD" name="MBD">
                         <input type="hidden" id="FBD" name="FBD">

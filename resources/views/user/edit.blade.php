@@ -199,7 +199,7 @@ recommends= [];
         format: 'D MMMM YYYY',
         observer: true,
         autoClose: true,
-        initialValue: {{($user->Detail->MotherBirthDay)?'1':'0'}},
+        initialValue: {{($user->Detail()->count())?(($user->Detail->MotherBirthDay)?'1':'0'):'0'}},
         onSelect: function(unix){
             MBD.value = unix;
         }
@@ -208,12 +208,12 @@ recommends= [];
         format: 'D MMMM YYYY',
         observer: true,
         autoClose: true,
-        initialValue: {{($user->Detail->FatherBirthDay)?'1':'0'}},
+        initialValue: {{($user->Detail()->count())?(($user->Detail->FatherBirthDay)?'1':'0'):'0'}},
         onSelect: function(unix){
             FBD.value = unix;
         }
         });
-        @if($user->Detail())
+        @if($user->Detail()->count())
         
         Orientation.value="{{$user->Detail->Orientation}}";
         MotherEducation.value="{{$user->Detail->MotherEducation}}";
@@ -224,8 +224,8 @@ recommends= [];
         SpouseRelation.value="{{$user->Detail->SpouseRelation}}";
         ChildCount.value="{{$user->Detail->ChildCount}}";
         Platform.value="{{$user->Detail->Platform}}";
-        Fajob.value="{{$jobs[$user->Detail->FatherJob]}}";
-        Mojob.value="{{$jobs[$user->Detail->MotherJob]}}";
+        Fajob.value="{{($user->Detail->FatherJob!=0)?$jobs[$user->Detail->FatherJob]:null}}";
+        Mojob.value="{{($user->Detail->MotherJob!=0)?$jobs[$user->Detail->MotherJob]:null}}";
         @endif
        
     });
