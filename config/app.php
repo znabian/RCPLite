@@ -53,6 +53,7 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+    'Panelurl' =>'http://85.208.255.101:8012/RedCastlePanel/public',
 
     'asset_url' => env('ASSET_URL', null),
 

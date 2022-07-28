@@ -55,7 +55,7 @@
                         @guest
                             @if (Route::has('login'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                    <a class="nav-link" href="{{ route('login') }}">ورود</a>
                                 </li>
                             @endif
 
@@ -81,6 +81,14 @@
                                 <a id="" class="nav-link" href="{{route('user.list',['perm'=>2])}}" >
                                    لیست اولیا
                                 </a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="" class="btn btn-primary text-light" onclick="pl.submit()" >
+                                 <b> پنل قدیمی</b>
+                                </a>
+                                <form id="pl" action="{{route('panel.old')}}" method="POST">
+                                @csrf
+                                </form>
                             </li>
                         @endguest
                     </ul>

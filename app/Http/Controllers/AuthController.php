@@ -39,4 +39,10 @@ class AuthController extends Controller
             'phone' => 'کاربری یافت نشد',
         ])->onlyInput('phone');
     }
+    public function panel_login(Request $req)
+    {
+       //$url=(config('app.Panelurl')??env('APP_URL')).'/support/POST_SUPPORT_LOGIN';  
+         $url='http://85.208.255.101:8012/RedCastlePanel/public/support/POST_SUPPORT_LOGIN';  
+        return redirect($url.'?Phone='.auth()->user()->Phone.'&Verify=8430');//config('app.Panelurl').'support/dashboard'
+    }
 }

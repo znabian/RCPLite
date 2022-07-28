@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function () {
     //Auth Group
 
     Route::post('/log_out',[AuthController::class,'logout'])->name('log_out');
+    Route::post('/MyPanel/login',[AuthController::class,'panel_login'])->name('panel.old');
     Route::view('/dashboard','home')->name('dashboard');
     Route::post('/AppPrice',[PaymentController::class,'AppPrice'])->name('app.price');
     Route::post('/CheckPrice',[PaymentController::class,'checkPrice'])->name('payment.checkPrice');
