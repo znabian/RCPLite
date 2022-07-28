@@ -16,13 +16,6 @@
             
 
         </div>
-        <div class="col-md-6 row text-right" >
-            @include('user.call.first_list')
-        </div>
-        <div class="col-md-6 text-right mb-3" >
-             @include('user.call.intro_list') 
-         
-        </div>
         <div class="col-md-6 text-right" >
             <div class="card mb-3">
                 <div class="card-header text-center" onclick="callform.classList.toggle('d-none');">
@@ -80,6 +73,13 @@
                     
                 </div>
             </div>
+        </div>
+        <div class="col-md-6 row text-right" >
+            @include('user.call.first_list')
+        </div>
+        <div class="col-md-6 text-right mb-3" >
+             @include('user.call.intro_list') 
+         
         </div>
     </div>
 </div>
